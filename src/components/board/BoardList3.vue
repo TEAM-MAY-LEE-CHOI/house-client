@@ -36,7 +36,7 @@ export default {
       articles: [],
       fields: [
         { key: "articleno", label: "글번호", tdClass: "tdClass" },
-        { key: "subject", label: "제목", tdClass: "tdSubject" },
+        { key: "title", label: "제목", tdClass: "tdSubject" },
         { key: "userid", label: "작성자", tdClass: "tdClass" },
         { key: "regtime", label: "작성일", tdClass: "tdClass" },
         { key: "hit", label: "조회수", tdClass: "tdClass" },

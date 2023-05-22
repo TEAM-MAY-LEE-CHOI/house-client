@@ -17,7 +17,7 @@
         </b-form-group>
 
         <b-form-group
-          id="subject-group"
+          id="title-group"
           label="제목:"
           label-for="title"
           description="제목을 입력하세요.">
@@ -123,14 +123,14 @@ export default {
     onReset(event) {
       event.preventDefault();
       this.article.articleno = 0;
-      this.article.subject = "";
+      this.article.title = "";
       this.article.content = "";
       this.moveList();
     },
     registArticle() {
       let param = {
         userid: this.article.userid,
-        subject: this.article.subject,
+        title: this.article.title,
         content: this.article.content,
       };
       writeArticle(
