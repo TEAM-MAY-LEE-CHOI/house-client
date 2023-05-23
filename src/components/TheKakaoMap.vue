@@ -74,47 +74,68 @@ export default {
       this.map = new window.kakao.maps.Map(container, options);
     },
     /* eslint-disable */
-    // 지정한 위치에 마커 불러오기
     loadMaker() {
-      // 현재 표시되어있는 marker들이 있다면 marker에 등록된 map을 없애준다.
       this.deleteMarker();
 
       var geocoder = new kakao.maps.services.Geocoder();
       this.markers = [];
+      let completedCount = 0;
 
-      this.positions.forEach((position) => {
-        geocoder.addressSearch(position.address, function (result, status) {
-          // 정상적으로 검색이 완료됐으면
+      const handleGeocodeComplete = () => {
+        completedCount++;
+        if (completedCount === this.positions.length) {
+          this.setBounds();
+        }
+      };
+
+      this.positions.forEach((position, index) => {
+        geocoder.addressSearch(position.address, (result, status) => {
           if (status === window.kakao.maps.services.Status.OK) {
             let latlng = new window.kakao.maps.LatLng(result[0].y, result[0].x);
             position.latlng = latlng;
-            fun();
+            createMarker();
+          } else {
+            position.latlng = null;
+            handleGeocodeComplete();
           }
         });
-        const fun = () => {
-          const marker = new window.kakao.maps.Marker({
-            map: this.map, // 마커를 표시할 지도
-            position: position.latlng, // 마커를 표시할 위치
-            title: position.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-            //   image: markerImage, // 마커의 이미지
+
+        const createMarker = () => {
+          const marker = new kakao.maps.Marker({
+            map: this.map,
+            position: position.latlng,
+            title: position.title,
+            clickable: true,
           });
           this.markers.push(marker);
+
+          var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+            iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+          // 인포윈도우를 생성합니다
+          var infowindow = new kakao.maps.InfoWindow({
+            content: iwContent,
+            removable: iwRemoveable,
+          });
+
+          // 마커에 클릭이벤트를 등록합니다
+          window.kakao.maps.event.addListener(marker, "click", function () {
+            console.log("click!");
+            // 마커 위에 인포윈도우를 표시합니다
+            infowindow.open(this.map, marker);
+          });
+          handleGeocodeComplete();
         };
       });
-
-      // this.fun2();
     },
-
     // 4. 지도를 이동시켜주기
-    // 배열.reduce( (누적값, 현재값, 인덱스, 요소)=>{ return 결과값}, 초기값);
-    fun2() {
-      console.log("fun2 ", this.positions[0]);
-
+    setBounds() {
+      this.positions = this.positions.filter(
+        (position) => position.latlng != null
+      );
       const bounds = this.positions.reduce(
         (bounds, position) => bounds.extend(position.latlng),
         new kakao.maps.LatLngBounds()
       );
-      console.log("bounds: ", bounds);
       this.map.setBounds(bounds);
     },
     deleteMarker() {
