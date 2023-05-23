@@ -1,9 +1,14 @@
-import { apiInstance } from "./index.js";
+import { memberInstance } from "./index.js";
+import qs from "qs";
 
-const api = apiInstance();
+const api = memberInstance();
 
 async function login(user, success, fail) {
-  await api.post(`/user/login`, JSON.stringify(user)).then(success).catch(fail);
+  await api.post(`/login`, qs.stringify(user)).then(success).catch(fail);
+}
+
+async function regist(user, success, fail) {
+  await api.post(`/regist`, qs.stringify(user)).then(success).catch(fail);
 }
 
 async function findById(userid, success, fail) {
@@ -12,12 +17,13 @@ async function findById(userid, success, fail) {
 }
 
 async function tokenRegeneration(user, success, fail) {
-  api.defaults.headers["refresh-token"] = sessionStorage.getItem("refresh-token"); //axios header에 refresh-token 셋팅
+  api.defaults.headers["refresh-token"] =
+    sessionStorage.getItem("refresh-token"); //axios header에 refresh-token 셋팅
   await api.post(`/user/refresh`, user).then(success).catch(fail);
 }
 
 async function logout(userid, success, fail) {
-  await api.get(`/user/logout/${userid}`).then(success).catch(fail);
+  await api.get(`/logout`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout };
+export { login, findById, regist, tokenRegeneration, logout };

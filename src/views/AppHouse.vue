@@ -5,11 +5,6 @@
     </h3>
     <b-row>
       <b-col>
-        <b-img alt="Happy House" :src="require('@/assets/main_logo.png')" />
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col>
         <house-search-bar></house-search-bar>
       </b-col>
     </b-row>

@@ -11,6 +11,17 @@ function apiInstance() {
   return instance;
 }
 
+// local vue api axios instance
+function memberInstance() {
+  const instance = axios.create({
+    baseURL: process.env.VUE_APP_API_BASE_URL,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded;",
+    },
+  });
+  return instance;
+}
+
 // house deal API axios instance
 function houseInstance() {
   const instance = axios.create({
@@ -22,4 +33,4 @@ function houseInstance() {
   return instance;
 }
 
-export { apiInstance, houseInstance };
+export { apiInstance, houseInstance, memberInstance };

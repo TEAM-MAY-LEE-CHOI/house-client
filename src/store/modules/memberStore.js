@@ -1,6 +1,6 @@
-import jwtDecode from "jwt-decode";
+// import jwtDecode from "jwt-decode";
 import router from "@/router";
-import { login, findById, tokenRegeneration, logout } from "@/api/member";
+import { login, regist, tokenRegeneration, logout } from "@/api/member";
 
 const memberStore = {
   namespaced: true,
@@ -29,28 +29,20 @@ const memberStore = {
       state.isValidToken = isValidToken;
     },
     SET_USER_INFO: (state, userInfo) => {
+      console.log("이름: ", userInfo);
       state.isLogin = true;
       state.userInfo = userInfo;
     },
   },
   actions: {
-    async userConfirm({ commit }, user) {
-      await login(
+    /* eslint-disable */
+    async userRegist({ commit }, user) {
+      console.log("regist: ", user);
+      await regist(
         user,
-        ({ data }) => {
-          if (data.message === "success") {
-            let accessToken = data["access-token"];
-            let refreshToken = data["refresh-token"];
-            // console.log("login success token created!!!! >> ", accessToken, refreshToken);
-            commit("SET_IS_LOGIN", true);
-            commit("SET_IS_LOGIN_ERROR", false);
-            commit("SET_IS_VALID_TOKEN", true);
-            sessionStorage.setItem("access-token", accessToken);
-            sessionStorage.setItem("refresh-token", refreshToken);
-          } else {
-            commit("SET_IS_LOGIN", false);
-            commit("SET_IS_LOGIN_ERROR", true);
-            commit("SET_IS_VALID_TOKEN", false);
+        ({ status, data }) => {
+          if (status === 200) {
+            console.log(data);
           }
         },
         (error) => {
@@ -58,28 +50,64 @@ const memberStore = {
         }
       );
     },
-    async getUserInfo({ commit, dispatch }, token) {
-      let decodeToken = jwtDecode(token);
-      // console.log("2. getUserInfo() decodeToken :: ", decodeToken);
-      await findById(
-        decodeToken.userid,
-        ({ data }) => {
-          if (data.message === "success") {
-            commit("SET_USER_INFO", data.userInfo);
-            // console.log("3. getUserInfo data >> ", data);
+    async userConfirm({ commit }, user) {
+      await login(
+        user,
+        ({ status, data }) => {
+          if (status === 200) {
+            console.log(data);
+            // let accessToken = data["access-token"];
+            // let refreshToken = data["refresh-token"];
+            // console.log("login success token created!!!! >> ", accessToken, refreshToken);
+            commit("SET_IS_LOGIN", true);
+            commit("SET_IS_LOGIN_ERROR", false);
+            commit("SET_USER_INFO", {
+              username: data.username,
+              role: data.role,
+              joindate: data.createdDate,
+            });
+            // commit("SET_IS_VALID_TOKEN", true);
+            // sessionStorage.setItem("access-token", accessToken);
+            // sessionStorage.setItem("refresh-token", refreshToken);
           } else {
-            console.log("유저 정보 없음!!!!");
+            commit("SET_IS_LOGIN", false);
+            commit("SET_IS_LOGIN_ERROR", true);
+            // commit("SET_IS_VALID_TOKEN", false);
           }
         },
-        async (error) => {
-          console.log("getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ", error.response.status);
-          commit("SET_IS_VALID_TOKEN", false);
-          await dispatch("tokenRegeneration");
+        (error) => {
+          console.log(error);
         }
       );
     },
+    // async getUserInfo({ commit, dispatch }, token) {
+    //   let decodeToken = jwtDecode(token);
+    //   // console.log("2. getUserInfo() decodeToken :: ", decodeToken);
+    //   await findById(
+    //     decodeToken.userid,
+    //     ({ data }) => {
+    //       if (data.message === "success") {
+    //         commit("SET_USER_INFO", data.username);
+    //         // console.log("3. getUserInfo data >> ", data);
+    //       } else {
+    //         console.log("유저 정보 없음!!!!");
+    //       }
+    //     },
+    //     async (error) => {
+    //       console.log(
+    //         "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
+    //         error.response.status
+    //       );
+    //       commit("SET_IS_VALID_TOKEN", false);
+    //       await dispatch("tokenRegeneration");
+    //     }
+    //   );
+    // },
     async tokenRegeneration({ commit, state }) {
-      console.log("토큰 재발급 >> 기존 토큰 정보 : {}", sessionStorage.getItem("access-token"));
+      console.log(
+        "토큰 재발급 >> 기존 토큰 정보 : {}",
+        sessionStorage.getItem("access-token")
+      );
       await tokenRegeneration(
         JSON.stringify(state.userInfo),
         ({ data }) => {
@@ -96,7 +124,7 @@ const memberStore = {
             console.log("갱신 실패");
             // 다시 로그인 전 DB에 저장된 RefreshToken 제거.
             await logout(
-              state.userInfo.userid,
+              state.userInfo.username,
               ({ data }) => {
                 if (data.message === "success") {
                   console.log("리프레시 토큰 제거 성공");
@@ -119,14 +147,13 @@ const memberStore = {
         }
       );
     },
-    async userLogout({ commit }, userid) {
+    async userLogout({ commit }, username) {
       await logout(
-        userid,
-        ({ data }) => {
-          if (data.message === "success") {
+        username,
+        ({ status }) => {
+          if (status === 200) {
             commit("SET_IS_LOGIN", false);
             commit("SET_USER_INFO", null);
-            commit("SET_IS_VALID_TOKEN", false);
           } else {
             console.log("유저 정보 없음!!!!");
           }
