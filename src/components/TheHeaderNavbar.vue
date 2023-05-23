@@ -1,9 +1,11 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="danger">
+    <b-navbar toggleable="lg" variant="light">
       <b-navbar-brand href="#">
         <router-link :to="{ name: 'main' }">
           <b-img
+            thumbnail
+            fluid
             :src="require('@/assets/main_logo.png')"
             id="logo"
             class="d-inline-block align-top"
@@ -43,11 +45,13 @@
         <!-- eslint-disable -->
         <b-navbar-nav class="ml-auto" v-if="userInfo">
           <b-nav-item class="align-self-center">
-            <b-avatar variant="primary"></b-avatar>
-            {{ userInfo.username }}님 환영합니다.
+            <b-avatar></b-avatar>
+            <b-nav-text class="ml-3">
+              {{ userInfo.username }}님 환영합니다.</b-nav-text
+            >
           </b-nav-item>
           <b-nav-item class="align-self-center">
-            <router-link :to="{ name: 'mypage' }" class="link align-self-center"
+            <router-link :to="{ name: 'mypage' }" class="align-self-center"
               >내정보보기</router-link
             >
           </b-nav-item>
@@ -118,7 +122,9 @@ export default {
 #logo {
   width: 120px;
 }
-
+a {
+  color: rgba(0, 0, 0, 0.5);
+}
 .link {
   text-decoration: none;
   color: black;

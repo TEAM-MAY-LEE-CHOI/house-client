@@ -21,7 +21,6 @@ export default {
   props: {
     chargers: [],
     houses: [],
-    bounds: [],
   },
   watch: {
     houses() {
@@ -36,7 +35,6 @@ export default {
       });
 
       this.loadMaker();
-      // this.fun2();
     },
   },
   created() {
@@ -84,35 +82,27 @@ export default {
       var geocoder = new kakao.maps.services.Geocoder();
       this.markers = [];
 
-      var bounds = new kakao.maps.LatLngBounds();
-
       this.positions.forEach((position) => {
-        geocoder.addressSearch(
-          position.address,
-          async function (result, status) {
-            // 정상적으로 검색이 완료됐으면
-            if (status === window.kakao.maps.services.Status.OK) {
-              let latlng = await new window.kakao.maps.LatLng(
-                result[0].y,
-                result[0].x
-              );
-              position.latlng = latlng;
-              bounds.extend(position.latlng);
-              fun(position);
-            }
+        geocoder.addressSearch(position.address, function (result, status) {
+          // 정상적으로 검색이 완료됐으면
+          if (status === window.kakao.maps.services.Status.OK) {
+            let latlng = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+            position.latlng = latlng;
+            fun();
           }
-        );
-      });
-      this.map.setBounds(bounds);
-      const fun = (position) => {
-        const marker = new window.kakao.maps.Marker({
-          map: this.map, // 마커를 표시할 지도
-          position: position.latlng, // 마커를 표시할 위치
-          title: position.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          //   image: markerImage, // 마커의 이미지
         });
-        this.markers.push(marker);
-      };
+        const fun = () => {
+          const marker = new window.kakao.maps.Marker({
+            map: this.map, // 마커를 표시할 지도
+            position: position.latlng, // 마커를 표시할 위치
+            title: position.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+            //   image: markerImage, // 마커의 이미지
+          });
+          this.markers.push(marker);
+        };
+      });
+
+      // this.fun2();
     },
 
     // 4. 지도를 이동시켜주기

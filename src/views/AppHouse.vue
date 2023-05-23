@@ -1,5 +1,5 @@
 <template>
-  <b-container class="bv-example-row mt-3 text-center">
+  <b-container fluid class="custom-container bv-example-row mt-3 text-center">
     <h3 class="underline-orange">
       <b-icon icon="house-fill"></b-icon> House Service
     </h3>
@@ -10,16 +10,16 @@
     </b-row>
     <!-- 카카오맵 -->
     <b-row class="mt-3">
-      <b-col cols="12">
+      <b-col cols="3" align="left">
+        <house-detail />
+      </b-col>
+      <b-col cols="9">
         <the-kakao-map :houses="houses"></the-kakao-map>
       </b-col>
     </b-row>
     <b-row>
-      <b-col cols="6" align="left">
+      <b-col align="center">
         <house-list />
-      </b-col>
-      <b-col cols="6">
-        <house-detail />
       </b-col>
     </b-row>
   </b-container>
@@ -58,5 +58,9 @@ export default {
     rgba(255, 255, 255, 0) 70%,
     rgba(231, 149, 27, 0.3) 30%
   );
+}
+
+.custom-container {
+  width: 80%;
 }
 </style>
