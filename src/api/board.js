@@ -7,7 +7,6 @@ function listArticle(param, success, fail) {
 }
 
 function writeArticle(article, success, fail) {
-  console.log(article);
   let tempArticle = {
     title: article.title,
     content: article.content,

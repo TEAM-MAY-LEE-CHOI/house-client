@@ -1,7 +1,25 @@
 <template>
-  <div>
-    <div id="map"></div>
-  </div>
+  <b-container>
+    <b-row>
+      <b-button @click="setOverlayMapTypeId('traffic')">
+        교통정보 보기
+      </b-button>
+      <b-button @click="setOverlayMapTypeId('roadview')">
+        로드뷰 도로정보 보기
+      </b-button>
+      <b-button @click="setOverlayMapTypeId('terrain')">
+        지형정보 보기
+      </b-button>
+      <b-button @click="setOverlayMapTypeId('use_district')">
+        지적편집도 보기
+      </b-button>
+    </b-row>
+    <b-row>
+      <b-col>
+        <div id="map"></div>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -16,6 +34,7 @@ export default {
       map: null,
       positions: [],
       markers: [],
+      currentTypeId: null,
     };
   },
   props: {
@@ -49,8 +68,39 @@ export default {
     }
   },
   methods: {
-    ...mapActions(houseStore, ["getHouseList"]),
+    ...mapActions(houseStore, ["getHouseList", "detailHouse", "housePosition"]),
     // api 불러오기
+    setOverlayMapTypeId(maptype) {
+      console.log("지도 타입", maptype);
+      var changeMaptype;
+
+      // maptype에 따라 지도에 추가할 지도타입을 결정합니다
+      if (maptype === "traffic") {
+        // 교통정보 지도타입
+        changeMaptype = kakao.maps.MapTypeId.TRAFFIC;
+      } else if (maptype === "roadview") {
+        // 로드뷰 도로정보 지도타입
+        changeMaptype = kakao.maps.MapTypeId.ROADVIEW;
+      } else if (maptype === "terrain") {
+        // 지형정보 지도타입
+        changeMaptype = kakao.maps.MapTypeId.TERRAIN;
+      } else if (maptype === "use_district") {
+        // 지적편집도 지도타입
+        changeMaptype = kakao.maps.MapTypeId.USE_DISTRICT;
+      }
+
+      // 이미 등록된 지도 타입이 있으면 제거합니다
+      if (this.currentTypeId) {
+        this.map.removeOverlayMapTypeId(this.currentTypeId);
+      }
+
+      // maptype에 해당하는 지도타입을 지도에 추가합니다
+      this.map.addOverlayMapTypeId(changeMaptype);
+
+      // 지도에 추가된 타입정보를 갱신합니다
+      this.currentTypeId = changeMaptype;
+    },
+
     loadScript() {
       const script = document.createElement("script");
       script.src =
@@ -73,6 +123,7 @@ export default {
 
       this.map = new window.kakao.maps.Map(container, options);
     },
+
     /* eslint-disable */
     loadMaker() {
       this.deleteMarker();
@@ -83,7 +134,10 @@ export default {
 
       const handleGeocodeComplete = () => {
         completedCount++;
-        if (completedCount === this.positions.length) {
+        if (
+          completedCount === this.positions.length &&
+          this.positions.length > 0
+        ) {
           this.setBounds();
         }
       };
@@ -109,21 +163,17 @@ export default {
           });
           this.markers.push(marker);
 
-          var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-            iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-          // 인포윈도우를 생성합니다
-          var infowindow = new kakao.maps.InfoWindow({
-            content: iwContent,
-            removable: iwRemoveable,
-          });
-
           // 마커에 클릭이벤트를 등록합니다
           window.kakao.maps.event.addListener(marker, "click", function () {
-            console.log("click!");
-            // 마커 위에 인포윈도우를 표시합니다
-            infowindow.open(this.map, marker);
+            selectHouse(index);
           });
           handleGeocodeComplete();
+        };
+
+        const selectHouse = (index) => {
+          this.map.panTo(position.latlng);
+          this.detailHouse(this.houses[index]);
+          this.housePosition(position.latlng);
         };
       });
     },

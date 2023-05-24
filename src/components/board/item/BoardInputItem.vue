@@ -3,20 +3,6 @@
     <b-col style="text-align: left">
       <b-form @submit="onSubmit" @reset="onReset">
         <b-form-group
-          id="userid-group"
-          label="작성자:"
-          label-for="userid"
-          description="작성자를 입력하세요.">
-          <b-form-input
-            id="userid"
-            :disabled="isUserid"
-            v-model="article.userid"
-            type="text"
-            required
-            placeholder="작성자 입력..."></b-form-input>
-        </b-form-group>
-
-        <b-form-group
           id="title-group"
           label="제목:"
           label-for="title"
@@ -101,21 +87,6 @@ export default {
 
       let err = true;
       let msg = "";
-      // !this.article.userid &&
-      //   ((msg = "작성자 입력해주세요"),
-      //   (err = false),
-      //   this.$refs.userid.focus());
-      // err &&
-      //   !this.article.subject &&
-      //   ((msg = "제목 입력해주세요"),
-      //   (err = false),
-      //   this.$refs.subject.focus());
-      // err &&
-      //   !this.article.content &&
-      //   ((msg = "내용 입력해주세요"),
-      //   (err = false),
-      //   this.$refs.content.focus());
-
       if (!err) alert(msg);
       else
         this.type === "register" ? this.registArticle() : this.modifyArticle();
@@ -136,6 +107,7 @@ export default {
       writeArticle(
         param,
         ({ status }) => {
+          console.log("status: ", status);
           let msg = "등록 처리시 문제가 발생했습니다.";
           if (status === 201) {
             msg = "등록이 완료되었습니다.";
@@ -144,7 +116,9 @@ export default {
           this.moveList();
         },
         (error) => {
+          alert("글작성 권한이 없습니다.");
           console.log(error);
+          this.moveList();
         }
       );
     },

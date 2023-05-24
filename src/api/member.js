@@ -23,7 +23,7 @@ async function tokenRegeneration(user, success, fail) {
 }
 
 async function logout(userid, success, fail) {
-  await api.get(`/logout`).then(success).catch(fail);
+  await api.get(`/mylogout`).then(success).catch(fail);
 }
 
 export { login, findById, regist, tokenRegeneration, logout };

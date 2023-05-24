@@ -11,24 +11,20 @@
     <!-- 카카오맵 -->
     <b-row class="mt-3">
       <b-col cols="3" align="left">
+        <kakao-load-view />
         <house-detail />
       </b-col>
       <b-col cols="9">
         <the-kakao-map :houses="houses"></the-kakao-map>
       </b-col>
     </b-row>
-    <b-row>
-      <b-col align="center">
-        <house-list />
-      </b-col>
-    </b-row>
   </b-container>
 </template>
 <script>
 import HouseSearchBar from "@/components/house/HouseSearchBar.vue";
-import HouseList from "@/components/house/HouseList.vue";
 import HouseDetail from "@/components/house/HouseDetail.vue";
 import TheKakaoMap from "@/components/TheKakaoMap.vue";
+import KakaoLoadView from "@/components/KakaoLoadView.vue";
 
 import { mapState } from "vuex";
 
@@ -38,15 +34,12 @@ export default {
   name: "AppHouse",
   components: {
     HouseSearchBar,
-    HouseList,
+    KakaoLoadView,
     HouseDetail,
     TheKakaoMap,
   },
   computed: {
     ...mapState(houseStore, ["houses"]),
-    // houses() {
-    //   return this.$store.state.houses;
-    // },
   },
 };
 </script>
@@ -61,6 +54,6 @@ export default {
 }
 
 .custom-container {
-  width: 80%;
+  width: 70%;
 }
 </style>

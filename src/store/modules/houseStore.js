@@ -7,6 +7,7 @@ const houseStore = {
     guguns: [{ value: null, text: "선택하세요" }],
     houses: [],
     house: null,
+    position: null,
   },
   getters: {},
   mutations: {
@@ -35,6 +36,9 @@ const houseStore = {
     },
     SET_DETAIL_HOUSE(state, house) {
       state.house = house;
+    },
+    SET_HOUSE_POSITION(state, position) {
+      state.position = position;
     },
   },
   actions: {
@@ -65,6 +69,7 @@ const houseStore = {
       console.log(gugunCode);
       const params = {
         LAWD_CD: gugunCode.substring(0, 5),
+        numOfRows: 30,
         DEAL_YMD: "202207",
         serviceKey: decodeURIComponent(SERVICE_KEY),
       };
@@ -81,6 +86,9 @@ const houseStore = {
     detailHouse: ({ commit }, house) => {
       // 나중에 house.일련번호를 이용하여 API 호출
       commit("SET_DETAIL_HOUSE", house);
+    },
+    housePosition: ({ commit }, position) => {
+      commit("SET_HOUSE_POSITION", position);
     },
   },
 };
