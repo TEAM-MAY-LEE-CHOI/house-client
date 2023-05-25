@@ -140,7 +140,7 @@ export default {
     loadMaker() {
       this.deleteMarker();
 
-      var geocoder = new kakao.maps.services.Geocoder();
+      var geocoder = new window.kakao.maps.services.Geocoder();
       this.markers = [];
       let completedCount = 0;
 

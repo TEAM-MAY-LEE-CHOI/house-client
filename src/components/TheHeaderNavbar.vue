@@ -48,9 +48,12 @@
             >
           </b-nav-item>
           <b-nav-item class="align-self-center">
-            <router-link :to="{ name: 'mypage' }" class="align-self-center"
-              >내정보보기</router-link
+            <b-button style="padding-bottom: 0; all: unset" v-b-modal.modal-lg
+              >내 정보 보기</b-button
             >
+            <b-modal id="modal-lg" size="lg" title="회원 관리">
+              <user-my-page />
+            </b-modal>
           </b-nav-item>
           <b-nav-item
             class="align-self-center link"
@@ -83,11 +86,14 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
-
+import UserMyPage from "./user/UserMyPage.vue";
 const memberStore = "memberStore";
 
 export default {
   name: "TheHeaderNavbar",
+  components: {
+    UserMyPage,
+  },
   data() {
     return {};
   },

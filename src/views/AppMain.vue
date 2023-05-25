@@ -1,34 +1,87 @@
 <template>
-  <b-container class="bv-example-row mt-3 text-center">
-    <h3 class="underline-steelblue"><b-icon icon="house"></b-icon> 홈</h3>
+  <b-container
+    fluid
+    style="width: 80%; height: 800px"
+    class="font1 bv-example-row mt-3 text-center">
+    <h3 class="underline-steelblue mb-3"><b-icon icon="house"></b-icon>메인</h3>
     <b-row>
-      <b-col></b-col>
-      <b-col cols="10">
+      <b-col>
+        <b-row>
+          <b-jumbotron
+            class="p-3"
+            bg-variant="muted"
+            text-variant="dark"
+            border-variant="dark">
+            <div class="mb-2">
+              <router-link
+                :to="{ name: 'house' }"
+                class="link"
+                style="color: black">
+                <b-icon icon="house-fill" font-scale="2"></b-icon>
+                아파트정보
+              </router-link>
+            </div>
+            <b-img
+              style="border: 5px solid lightgray"
+              thumbnail
+              fluid
+              :src="require('@/assets/apt_search.png')"
+              id="logo"
+              class="d-inline-block align-top"
+              alt="logo"></b-img>
+          </b-jumbotron>
+        </b-row>
+        <b-row class="mt-0">
+          <b-jumbotron
+            class="p-3"
+            bg-variant="muted"
+            text-variant="dark"
+            border-variant="dark">
+            <div class="mb-2">
+              <router-link
+                style="color: black"
+                :to="{ name: 'board' }"
+                class="m-3 link">
+                <b-icon icon="journal" font-scale="2"></b-icon>
+                Q&A게시판
+              </router-link>
+            </div>
+            <b-img
+              style="border: 5px solid lightgray"
+              thumbnail
+              fluid
+              :src="require('@/assets/qna.png')"
+              id="logo"
+              class="d-inline-block align-top"
+              alt="logo"></b-img>
+          </b-jumbotron>
+        </b-row>
+      </b-col>
+      <b-col>
         <b-jumbotron
+          class="p-3"
           bg-variant="muted"
           text-variant="dark"
           border-variant="dark">
-          <template #header>부동산 프로젝트</template>
-
-          <template #lead>
-            Team : LeeAndChoi<br />
-            부동산 프로젝트<br />
-            <br />
-            <br />
-          </template>
-
-          <hr class="my-4" />
-
-          <a href>부동산 뉴스룸</a>
-          <br />
-          <br />
-          <a href>오늘의 거래</a>
-          <br />
-          <br />
-          <a href>주택 대출 안내</a>
+          <div class="mb-2">
+            <router-link
+              style="color: black"
+              :to="{ name: 'news' }"
+              class="link">
+              <b-icon icon="newspaper" font-scale="2"></b-icon>
+              뉴스 검색
+            </router-link>
+          </div>
+          <b-img
+            style="border: 5px solid lightgray"
+            thumbnail
+            fluid
+            :src="require('@/assets/news.png')"
+            id="logo"
+            class="d-inline-block align-top"
+            alt="logo"></b-img>
         </b-jumbotron>
       </b-col>
-      <b-col></b-col>
     </b-row>
   </b-container>
 </template>

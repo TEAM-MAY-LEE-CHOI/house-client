@@ -1,6 +1,6 @@
 // import jwtDecode from "jwt-decode";
 import router from "@/router";
-import { login, regist, tokenRegeneration, logout } from "@/api/member";
+import { login, regist, tokenRegeneration, logout, modify } from "@/api/member";
 
 const memberStore = {
   namespaced: true,
@@ -80,29 +80,6 @@ const memberStore = {
         }
       );
     },
-    // async getUserInfo({ commit, dispatch }, token) {
-    //   let decodeToken = jwtDecode(token);
-    //   // console.log("2. getUserInfo() decodeToken :: ", decodeToken);
-    //   await findById(
-    //     decodeToken.userid,
-    //     ({ data }) => {
-    //       if (data.message === "success") {
-    //         commit("SET_USER_INFO", data.username);
-    //         // console.log("3. getUserInfo data >> ", data);
-    //       } else {
-    //         console.log("유저 정보 없음!!!!");
-    //       }
-    //     },
-    //     async (error) => {
-    //       console.log(
-    //         "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
-    //         error.response.status
-    //       );
-    //       commit("SET_IS_VALID_TOKEN", false);
-    //       await dispatch("tokenRegeneration");
-    //     }
-    //   );
-    // },
     async tokenRegeneration({ commit, state }) {
       console.log(
         "토큰 재발급 >> 기존 토큰 정보 : {}",
@@ -162,6 +139,12 @@ const memberStore = {
           console.log(error);
         }
       );
+    },
+    async userModify({ commit }, user) {
+      console.log("user: ", user);
+      await modify(user, (error) => {
+        console.log(error);
+      });
     },
   },
 };

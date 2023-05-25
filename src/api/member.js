@@ -11,6 +11,10 @@ async function regist(user, success, fail) {
   await api.post(`/regist`, qs.stringify(user)).then(success).catch(fail);
 }
 
+async function modify(user, success, fail) {
+  await api.put(`/member`, qs.stringify(user)).then(success).catch(fail);
+}
+
 async function findById(userid, success, fail) {
   api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
   await api.get(`/user/info/${userid}`).then(success).catch(fail);
@@ -26,4 +30,4 @@ async function logout(userid, success, fail) {
   await api.get(`/mylogout`).then(success).catch(fail);
 }
 
-export { login, findById, regist, tokenRegeneration, logout };
+export { login, findById, regist, tokenRegeneration, logout, modify };
