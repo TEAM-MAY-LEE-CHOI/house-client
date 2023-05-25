@@ -2,11 +2,7 @@
   <b-row class="mb-1">
     <b-col style="text-align: left">
       <b-form @submit="onSubmit" @reset="onReset">
-        <b-form-group
-          id="title-group"
-          label="제목:"
-          label-for="title"
-          description="제목을 입력하세요.">
+        <b-form-group id="title-group" label="제목:" label-for="title">
           <b-form-input
             id="title"
             v-model="article.title"

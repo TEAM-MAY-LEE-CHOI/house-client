@@ -1,7 +1,10 @@
 <template>
-  <b-container class="bv-example-row mt-3 text-center">
+  <b-container
+    style="width: 80%"
+    fluid
+    class="font1 bv-example-row mt-3 text-center">
     <h3 class="underline-hotpink">
-      <b-icon icon="journals"></b-icon> Board Service
+      <b-icon icon="journals"></b-icon> QnA 게시판
     </h3>
     <router-view v-if="isLogin"></router-view>
     <div v-else>로그인이 필요합니다.</div>

@@ -1,22 +1,34 @@
 <template>
-  <b-container>
-    <b-row>
-      <b-button @click="setOverlayMapTypeId('traffic')">
+  <b-container fluid>
+    <b-row class="font1 mb-2 pl-3 pr-3">
+      <b-button
+        style="background-color: darkorange"
+        class="button1 mr-2"
+        @click="setOverlayMapTypeId('traffic')">
         교통정보 보기
       </b-button>
-      <b-button @click="setOverlayMapTypeId('roadview')">
+      <b-button
+        class="button1 mr-2"
+        style="background-color: chocolate"
+        @click="setOverlayMapTypeId('roadview')">
         로드뷰 도로정보 보기
       </b-button>
-      <b-button @click="setOverlayMapTypeId('terrain')">
+      <b-button
+        style="background-color: brown"
+        class="button1 mr-2"
+        @click="setOverlayMapTypeId('terrain')">
         지형정보 보기
       </b-button>
-      <b-button @click="setOverlayMapTypeId('use_district')">
+      <b-button
+        class="button1"
+        style="background-color: saddlebrown"
+        @click="setOverlayMapTypeId('use_district')">
         지적편집도 보기
       </b-button>
     </b-row>
     <b-row>
       <b-col>
-        <div id="map"></div>
+        <div style="border: 3px solid gray; border-radius: 5px" id="map"></div>
       </b-col>
     </b-row>
   </b-container>

@@ -1,5 +1,5 @@
 <template>
-  <b-row class="mt-4 mb-4 text-center">
+  <b-row class="font1 mt-4 mb-4 text-center">
     <b-col class="sm-3">
       <b-form-select
         v-model="sidoCode"
@@ -8,18 +8,11 @@
     </b-col>
     <b-col class="sm-3">
       <b-form-select
+        id="gugun"
         v-model="gugunCode"
+        text-field="text"
         :options="guguns"
         @change="searchApt"></b-form-select>
-    </b-col>
-    <b-col class="sm-3">
-      <b-form-input
-        v-model.trim="dongCode"
-        placeholder="동코드 입력...(예 : 11110)"
-        @keypress.enter="sendKeyword"></b-form-input>
-    </b-col>
-    <b-col class="sm-3" align="left">
-      <b-button variant="outline-primary" @click="sendKeyword">검색</b-button>
     </b-col>
   </b-row>
 </template>
@@ -35,7 +28,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
     키: 값
     memberStore: memberStore,
     houseStore: houseStore
-  }  
+  }
 */
 const houseStore = "houseStore";
 
@@ -59,7 +52,12 @@ export default {
     this.getSido();
   },
   methods: {
-    ...mapActions(houseStore, ["getSido", "getGugun", "getHouseList"]),
+    ...mapActions(houseStore, [
+      "getSido",
+      "getGugun",
+      "getHouseList",
+      "getNewsList",
+    ]),
     ...mapMutations(houseStore, [
       "CLEAR_SIDO_LIST",
       "CLEAR_GUGUN_LIST",
@@ -71,7 +69,16 @@ export default {
       if (this.sidoCode) this.getGugun(this.sidoCode);
     },
     searchApt() {
-      if (this.gugunCode) this.getHouseList(this.gugunCode);
+      if (this.gugunCode) {
+        console.log(this.gugunCode);
+        this.getHouseList(this.gugunCode);
+
+        const selectedGugun = this.guguns.find(
+          (gugun) => gugun.value === this.gugunCode
+        );
+
+        this.getNewsList(selectedGugun.text);
+      }
     },
   },
 };

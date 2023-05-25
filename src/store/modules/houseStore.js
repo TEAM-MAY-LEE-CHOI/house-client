@@ -1,4 +1,4 @@
-import { sidoList, gugunList, houseList } from "@/api/house.js";
+import { sidoList, gugunList, houseList, newsList } from "@/api/house.js";
 
 const houseStore = {
   namespaced: true,
@@ -8,6 +8,7 @@ const houseStore = {
     houses: [],
     house: null,
     position: null,
+    newsList: [],
   },
   getters: {},
   mutations: {
@@ -39,6 +40,9 @@ const houseStore = {
     },
     SET_HOUSE_POSITION(state, position) {
       state.position = position;
+    },
+    SET_NEWS_LIST(state, newsList) {
+      state.newsList = newsList;
     },
   },
   actions: {
@@ -82,6 +86,15 @@ const houseStore = {
           console.log(error);
         }
       );
+    },
+    getNewsList: ({ commit }, keyword) => {
+      const params = {
+        keyword: keyword,
+      };
+      newsList(params, ({ data }) => {
+        console.log(data);
+        commit("SET_NEWS_LIST", data);
+      });
     },
     detailHouse: ({ commit }, house) => {
       // 나중에 house.일련번호를 이용하여 API 호출

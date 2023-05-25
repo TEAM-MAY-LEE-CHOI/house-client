@@ -1,6 +1,6 @@
 <template>
   <b-container fluid class="custom-container bv-example-row mt-3 text-center">
-    <h3 class="underline-orange">
+    <h3 class="font1 underline-orange">
       <b-icon icon="house-fill"></b-icon> House Service
     </h3>
     <b-row>
@@ -8,14 +8,30 @@
         <house-search-bar></house-search-bar>
       </b-col>
     </b-row>
-    <!-- 카카오맵 -->
     <b-row class="mt-3">
-      <b-col cols="3" align="left">
-        <kakao-load-view />
-        <house-detail />
-      </b-col>
-      <b-col cols="9">
+      <!-- 카카오맵 -->
+      <b-col id="id2" v-if="house" cols="9">
         <the-kakao-map :houses="houses"></the-kakao-map>
+      </b-col>
+      <b-col id="id2" v-else cols="12">
+        <the-kakao-map :houses="houses"></the-kakao-map>
+      </b-col>
+      <b-col id="id1" v-if="house" cols="3" align="left">
+        <router-link :to="{ name: 'news' }" class="link">
+          <b-button link-router class="font1 button1 mb-2"
+            >현재 지역 뉴스 보기</b-button
+          >
+        </router-link>
+        <div
+          style="border: 3px solid gray; border-radius: 5px"
+          class="height-100%">
+          <div class="p-20">
+            <kakao-load-view />
+          </div>
+          <div>
+            <house-detail />
+          </div>
+        </div>
       </b-col>
     </b-row>
   </b-container>
@@ -39,7 +55,7 @@ export default {
     TheKakaoMap,
   },
   computed: {
-    ...mapState(houseStore, ["houses"]),
+    ...mapState(houseStore, ["houses", "house"]),
   },
 };
 </script>
