@@ -16,4 +16,8 @@ function houseList(params, success, fail) {
   house.get(``, { params: params }).then(success).catch(fail);
 }
 
-export { sidoList, gugunList, houseList };
+function newsList(params, success, fail) {
+  api.get(`/search/news`, { params: params }).then(success).catch(fail);
+}
+
+export { sidoList, gugunList, houseList, newsList };

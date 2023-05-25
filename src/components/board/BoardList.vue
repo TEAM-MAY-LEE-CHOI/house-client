@@ -1,18 +1,23 @@
 <template>
-  <b-container class="bv-example-row mt-3">
+  <b-container fluid class="bv-example-row mt-3">
     <b-row>
       <b-col>
-        <b-alert show><h3>글목록</h3></b-alert>
+        <b-alert show style="background-color: paleturquoise"
+          ><h3 class="mb-0 pt-2">글목록</h3></b-alert
+        >
       </b-col>
     </b-row>
     <b-row class="mb-1">
       <b-col class="text-right">
-        <b-button variant="outline-primary" @click="moveWrite()"
+        <b-button
+          class="button1"
+          style="background-color: deepskyblue"
+          @click="moveWrite()"
           >글쓰기</b-button
         >
       </b-col>
     </b-row>
-    <b-row>
+    <b-row class="mt-3">
       <b-col>
         <b-table
           striped
@@ -45,15 +50,10 @@ export default {
     return {
       articles: [],
       fields: [
-        // { key: "articleno", label: "글번호", tdClass: "tdClass" },
-        // { key: "subject", label: "제목", tdClass: "tdSubject" },
-        // { key: "userid", label: "작성자", tdClass: "tdClass" },
-        // { key: "regtime", label: "작성일", tdClass: "tdClass" },
-        // { key: "hit", label: "조회수", tdClass: "tdClass" },
         { key: "id", label: "글번호", tdClass: "tdClass" },
         { key: "authorName", label: "작성자", tdClass: "tdClass" },
         { key: "title", label: "제목", tdClass: "tdSubject" },
-        { key: "content", label: "내용", tdClass: "tdClass" },
+        { key: "content", label: "내용", tdClass: "tdContent" },
         { key: "createdDate", label: "작성일", tdClass: "tdClass" },
         { key: "lastModifiedDate", label: "수정일", tdClass: "tdClass" },
       ],
@@ -97,7 +97,14 @@ export default {
   text-align: center;
 }
 .tdSubject {
-  width: 300px;
+  width: 100px;
   text-align: left;
+}
+.tdContent {
+  width: 300px;
+  text-align: center;
+}
+a {
+  color: deepskyblue;
 }
 </style>

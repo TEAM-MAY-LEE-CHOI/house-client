@@ -7,6 +7,7 @@ function apiInstance() {
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
+    withCredentials: true,
   });
   return instance;
 }
@@ -18,6 +19,7 @@ function memberInstance() {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded;",
     },
+    withCredentials: true,
   });
   return instance;
 }
