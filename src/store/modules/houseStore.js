@@ -1,4 +1,4 @@
-import { sidoList, gugunList, houseList } from "@/api/house.js";
+import { sidoList, gugunList, houseList, newsList } from "@/api/house.js";
 
 const houseStore = {
   namespaced: true,
@@ -7,6 +7,8 @@ const houseStore = {
     guguns: [{ value: null, text: "선택하세요" }],
     houses: [],
     house: null,
+    position: null,
+    newsList: [],
   },
   getters: {},
   mutations: {
@@ -35,6 +37,12 @@ const houseStore = {
     },
     SET_DETAIL_HOUSE(state, house) {
       state.house = house;
+    },
+    SET_HOUSE_POSITION(state, position) {
+      state.position = position;
+    },
+    SET_NEWS_LIST(state, newsList) {
+      state.newsList = newsList;
     },
   },
   actions: {
@@ -65,6 +73,7 @@ const houseStore = {
       console.log(gugunCode);
       const params = {
         LAWD_CD: gugunCode.substring(0, 5),
+        numOfRows: 30,
         DEAL_YMD: "202207",
         serviceKey: decodeURIComponent(SERVICE_KEY),
       };
@@ -78,9 +87,21 @@ const houseStore = {
         }
       );
     },
+    getNewsList: ({ commit }, keyword) => {
+      const params = {
+        keyword: keyword,
+      };
+      newsList(params, ({ data }) => {
+        console.log(data);
+        commit("SET_NEWS_LIST", data);
+      });
+    },
     detailHouse: ({ commit }, house) => {
       // 나중에 house.일련번호를 이용하여 API 호출
       commit("SET_DETAIL_HOUSE", house);
+    },
+    housePosition: ({ commit }, position) => {
+      commit("SET_HOUSE_POSITION", position);
     },
   },
 };

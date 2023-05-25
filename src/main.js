@@ -5,6 +5,7 @@ import store from "./store";
 
 import "@/api/lib/fontAwesomeIcon.js"; // fontAwesomeIcon.js 불러옴
 import "@/api/lib/vueBootstrap.js";
+import "./styles/global.css";
 
 Vue.config.productionTip = false;
 

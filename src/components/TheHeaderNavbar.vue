@@ -1,9 +1,12 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="danger">
+    <b-navbar toggleable="lg" style="background-color: lightblue">
       <b-navbar-brand href="#">
         <router-link :to="{ name: 'main' }">
           <b-img
+            style="border: 5px solid lightgray"
+            thumbnail
+            fluid
             :src="require('@/assets/main_logo.png')"
             id="logo"
             class="d-inline-block align-top"
@@ -15,39 +18,37 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item href="#">
-            <router-link :to="{ name: 'main' }" class="link">
+          <b-nav-item href="#" class="font1">
+            <router-link :to="{ name: 'main' }" class="m-3 link">
               <b-icon icon="house-door" font-scale="2"></b-icon>
               메인
             </router-link>
-            <!-- <router-link :to="{ name: 'insta' }" class="m-2 link">
-              <b-icon icon="instagram" animation="fade" font-scale="2"></b-icon>
-              인스타그램
-            </router-link> -->
-            <router-link :to="{ name: 'board' }" class="m-2 link">
-              <b-icon icon="journal" font-scale="2"></b-icon>
-              Q&A게시판
-            </router-link>
-            <router-link :to="{ name: 'house' }" class="m-2 link">
+            <router-link :to="{ name: 'house' }" class="m-3 link">
               <b-icon icon="house-fill" font-scale="2"></b-icon>
               아파트정보
             </router-link>
-            <router-link :to="{ name: 'main' }" class="link">
-              <b-icon icon="calendar-check" font-scale="2"></b-icon>
-              팔로워 관리
+            <router-link :to="{ name: 'news' }" class="m-3 link">
+              <b-icon icon="newspaper" font-scale="2"></b-icon>
+              뉴스 검색
+            </router-link>
+            <router-link :to="{ name: 'board' }" class="m-3 link">
+              <b-icon icon="journal" font-scale="2"></b-icon>
+              Q&A게시판
             </router-link>
           </b-nav-item>
         </b-navbar-nav>
 
         <!-- after login -->
         <!-- eslint-disable -->
-        <b-navbar-nav class="ml-auto" v-if="userInfo">
+        <b-navbar-nav class="font1 ml-auto" v-if="userInfo">
           <b-nav-item class="align-self-center">
-            <b-avatar variant="primary"></b-avatar>
-            {{ userInfo.username }}님 환영합니다.
+            <b-avatar></b-avatar>
+            <b-nav-text class="ml-3">
+              {{ userInfo.username }}님 환영합니다.</b-nav-text
+            >
           </b-nav-item>
           <b-nav-item class="align-self-center">
-            <router-link :to="{ name: 'mypage' }" class="link align-self-center"
+            <router-link :to="{ name: 'mypage' }" class="align-self-center"
               >내정보보기</router-link
             >
           </b-nav-item>
@@ -118,7 +119,9 @@ export default {
 #logo {
   width: 120px;
 }
-
+a {
+  color: rgba(0, 0, 0, 0.5);
+}
 .link {
   text-decoration: none;
   color: black;

@@ -1,7 +1,37 @@
 <template>
-  <div>
-    <div id="map"></div>
-  </div>
+  <b-container fluid>
+    <b-row class="font1 mb-2 pl-3 pr-3">
+      <b-button
+        style="background-color: darkorange"
+        class="button1 mr-2"
+        @click="setOverlayMapTypeId('traffic')">
+        교통정보 보기
+      </b-button>
+      <b-button
+        class="button1 mr-2"
+        style="background-color: chocolate"
+        @click="setOverlayMapTypeId('roadview')">
+        로드뷰 도로정보 보기
+      </b-button>
+      <b-button
+        style="background-color: brown"
+        class="button1 mr-2"
+        @click="setOverlayMapTypeId('terrain')">
+        지형정보 보기
+      </b-button>
+      <b-button
+        class="button1"
+        style="background-color: saddlebrown"
+        @click="setOverlayMapTypeId('use_district')">
+        지적편집도 보기
+      </b-button>
+    </b-row>
+    <b-row>
+      <b-col>
+        <div style="border: 3px solid gray; border-radius: 5px" id="map"></div>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -16,12 +46,12 @@ export default {
       map: null,
       positions: [],
       markers: [],
+      currentTypeId: null,
     };
   },
   props: {
     chargers: [],
     houses: [],
-    bounds: [],
   },
   watch: {
     houses() {
@@ -36,7 +66,6 @@ export default {
       });
 
       this.loadMaker();
-      // this.fun2();
     },
   },
   created() {
@@ -51,8 +80,39 @@ export default {
     }
   },
   methods: {
-    ...mapActions(houseStore, ["getHouseList"]),
+    ...mapActions(houseStore, ["getHouseList", "detailHouse", "housePosition"]),
     // api 불러오기
+    setOverlayMapTypeId(maptype) {
+      console.log("지도 타입", maptype);
+      var changeMaptype;
+
+      // maptype에 따라 지도에 추가할 지도타입을 결정합니다
+      if (maptype === "traffic") {
+        // 교통정보 지도타입
+        changeMaptype = kakao.maps.MapTypeId.TRAFFIC;
+      } else if (maptype === "roadview") {
+        // 로드뷰 도로정보 지도타입
+        changeMaptype = kakao.maps.MapTypeId.ROADVIEW;
+      } else if (maptype === "terrain") {
+        // 지형정보 지도타입
+        changeMaptype = kakao.maps.MapTypeId.TERRAIN;
+      } else if (maptype === "use_district") {
+        // 지적편집도 지도타입
+        changeMaptype = kakao.maps.MapTypeId.USE_DISTRICT;
+      }
+
+      // 이미 등록된 지도 타입이 있으면 제거합니다
+      if (this.currentTypeId) {
+        this.map.removeOverlayMapTypeId(this.currentTypeId);
+      }
+
+      // maptype에 해당하는 지도타입을 지도에 추가합니다
+      this.map.addOverlayMapTypeId(changeMaptype);
+
+      // 지도에 추가된 타입정보를 갱신합니다
+      this.currentTypeId = changeMaptype;
+    },
+
     loadScript() {
       const script = document.createElement("script");
       script.src =
@@ -75,56 +135,69 @@ export default {
 
       this.map = new window.kakao.maps.Map(container, options);
     },
+
     /* eslint-disable */
-    // 지정한 위치에 마커 불러오기
     loadMaker() {
-      // 현재 표시되어있는 marker들이 있다면 marker에 등록된 map을 없애준다.
       this.deleteMarker();
 
       var geocoder = new kakao.maps.services.Geocoder();
       this.markers = [];
+      let completedCount = 0;
 
-      var bounds = new kakao.maps.LatLngBounds();
-
-      this.positions.forEach((position) => {
-        geocoder.addressSearch(
-          position.address,
-          async function (result, status) {
-            // 정상적으로 검색이 완료됐으면
-            if (status === window.kakao.maps.services.Status.OK) {
-              let latlng = await new window.kakao.maps.LatLng(
-                result[0].y,
-                result[0].x
-              );
-              position.latlng = latlng;
-              bounds.extend(position.latlng);
-              fun(position);
-            }
-          }
-        );
-      });
-      this.map.setBounds(bounds);
-      const fun = (position) => {
-        const marker = new window.kakao.maps.Marker({
-          map: this.map, // 마커를 표시할 지도
-          position: position.latlng, // 마커를 표시할 위치
-          title: position.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          //   image: markerImage, // 마커의 이미지
-        });
-        this.markers.push(marker);
+      const handleGeocodeComplete = () => {
+        completedCount++;
+        if (
+          completedCount === this.positions.length &&
+          this.positions.length > 0
+        ) {
+          this.setBounds();
+        }
       };
+
+      this.positions.forEach((position, index) => {
+        geocoder.addressSearch(position.address, (result, status) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            let latlng = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+            position.latlng = latlng;
+            createMarker();
+          } else {
+            position.latlng = null;
+            handleGeocodeComplete();
+          }
+        });
+
+        const createMarker = () => {
+          const marker = new kakao.maps.Marker({
+            map: this.map,
+            position: position.latlng,
+            title: position.title,
+            clickable: true,
+          });
+          this.markers.push(marker);
+
+          // 마커에 클릭이벤트를 등록합니다
+          window.kakao.maps.event.addListener(marker, "click", function () {
+            selectHouse(index);
+          });
+          handleGeocodeComplete();
+        };
+
+        const selectHouse = (index) => {
+          this.map.panTo(position.latlng);
+          this.detailHouse(this.houses[index]);
+          this.housePosition(position.latlng);
+        };
+      });
     },
-
     // 4. 지도를 이동시켜주기
-    // 배열.reduce( (누적값, 현재값, 인덱스, 요소)=>{ return 결과값}, 초기값);
-    fun2() {
-      console.log("fun2 ", this.positions[0]);
-
+    setBounds() {
+      this.positions = this.positions.filter(
+        (position) => position.latlng != null
+      );
       const bounds = this.positions.reduce(
         (bounds, position) => bounds.extend(position.latlng),
         new kakao.maps.LatLngBounds()
       );
-      console.log("bounds: ", bounds);
       this.map.setBounds(bounds);
     },
     deleteMarker() {
